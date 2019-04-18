@@ -30,14 +30,19 @@ public class UserController {
     @PostMapping("/users")
     public String formPost(Model model, ServerWebExchange serverWebExchange){
 
-        serverWebExchange.getFormData().subscribe(map -> {
+        /*serverWebExchange.getFormData().subscribe(map -> {
             String limit = map.getFirst("limit");
 
             if(StringUtils.isEmpty(limit)) {
                 limit = "10";
             }
             model.addAttribute("users", apiService.getUsers(Integer.valueOf(limit)));
-        });
+        });*/
+
+        model.addAttribute("users",
+                apiService.getUsers(serverWebExchange
+                .getFormData()
+                .map(data -> new Integer(data.getFirst("limit")))));
 
         return "userlist";
     }
